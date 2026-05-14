@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="title" content="AdaptSplat: Adapting Vision Foundation Models for Feed-Forward 3D Gaussian Splatting">
+  <meta name="description" content="AdaptSplat adapts vision foundation models at both architecture and feature levels for state-of-the-art feed-forward 3D Gaussian Splatting reconstruction.">
+  <meta name="keywords" content="3D Gaussian Splatting, Feed-Forward Reconstruction, Foundation Models, DINOv3-ConvNeXt, Frequency-Preserving Adapter, Novel View Synthesis">
+  <meta name="author" content="Mingwei Xing, Xinliang Wang, Yifeng Shi">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Ke Holdings Inc.">
+  <meta property="og:title" content="AdaptSplat: Adapting Vision Foundation Models for Feed-Forward 3D Gaussian Splatting">
+  <meta property="og:description" content="AdaptSplat adapts the visual foundation model at both architecture and feature levels for state-of-the-art feed-forward 3DGS reconstruction with stable cross-domain generalization.">
+  <meta property="og:url" content="#">
+  <meta property="og:image" content="static/images/intro.png">
+
+  <meta name="citation_title" content="AdaptSplat: Adapting Vision Foundation Models for Feed-Forward 3D Gaussian Splatting">
+  <meta name="citation_author" content="Xing, Mingwei">
+  <meta name="citation_author" content="Wang, Xinliang">
+  <meta name="citation_author" content="Shi, Yifeng">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="">
+
+  <meta name="theme-color" content="#2563eb">
+
+  <title>AdaptSplat</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <style>
+    /* ── Video Comparison Slider ─────────────────────────────── */
+    .vc-section {
+      background: #f5f7fa;
+      padding: 3.5rem 0 2.5rem;
+    }
+    .vc-section .subtitle-text {
+      color: #555;
+      text-align: center;
+      margin-bottom: 1.8rem;
+      font-size: 1rem;
+    }
+    .vc-outer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    /* clip-path on a wrapper div is more reliable than on a <video> element */
+    .vc-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #000;
+      cursor: ew-resize;
+      line-height: 0;
+    }
+    /* Ours: normal flow, drives container height */
+    #vid-ours {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      pointer-events: none;
+    }
+    /* MVP wrapper: fills entire container, clipped by JS via clip-path */
+    #mvp-wrapper {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      clip-path: inset(0 0 0 50%);
+    }
+    /* MVP video fills its wrapper exactly */
+    #vid-mvp {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+    .vc-handle {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: rgba(255,255,255,0.9);
+      transform: translateX(-50%);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .vc-handle-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px; height: 44px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      pointer-events: none;
+      user-select: none;
+    }
+    .vc-label {
+      position: absolute;
+      top: 12px;
+      padding: 4px 14px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      z-index: 11;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+    .vc-label-ours { left: 12px; }
+    .vc-label-mvp  { right: 12px; }
+    /* Click-to-play overlay — shown when autoplay is blocked */
+    #vc-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.38);
+      z-index: 20;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    #vc-overlay button {
+      background: rgba(255,255,255,0.92);
+      color: #111;
+      border: none;
+      padding: 13px 30px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.28);
+      pointer-events: all;
+    }
+
+    /* ── Scene Dot Navigation ────────────────────────────────── */
+    .scene-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 1.4rem;
+    }
+    .scene-dot {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #bbb;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .scene-dot.active {
+      background: #333;
+      transform: scale(1.35);
+    }
+    .scene-dot:hover:not(.active) {
+      background: #888;
+    }
+    .scene-caption {
+      color: #888;
+      font-size: 13px;
+      text-align: center;
+      margin-top: 0.7rem;
+    }
+
+    /* ── Results Tables ──────────────────────────────────────── */
+    .results-table {
+      font-size: 0.88rem;
+      width: 100%;
+    }
+    .results-table thead th {
+      background: #f5f5f5;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .results-table tbody td {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .results-table tbody tr:last-child td {
+      font-weight: 700;
+      background: #fffbe6;
+    }
+    .results-table tbody tr.ours-row td {
+      font-weight: 700;
+      background: #fffbe6;
+    }
+    .table-caption {
+      font-size: 0.9rem;
+      color: #555;
+      text-align: center;
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .table-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      text-align: center;
+    }
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Section spacing tweak ──────────────────────────────── */
+    .section-gap { margin-bottom: 0; }
+
+  </style>
+</head>
+<body>
+
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+
+  <!-- ══════════════════════════════════════════════════════════
+       HERO / TITLE
+  ══════════════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+
+            <h1 class="title is-1 publication-title">
+              AdaptSplat: Adapting Vision Foundation Models for<br>
+              Feed-Forward 3D Gaussian Splatting
+            </h1>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Mingwei Xing<sup>*</sup>,</span>
+              <span class="author-block">Xinliang Wang<sup>*</sup>,</span>
+              <span class="author-block">Yifeng Shi<sup>†</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors" style="margin-top: 0.5rem;">
+              <div style="display: inline-flex; align-items: center; justify-content: center; gap: 10px;">
+                <span style="margin: 0;">Ke Holdings Inc.</span>
+                <img src="static/images/ke_logo.png" alt="KE Logo"
+                     style="width: 10vw; max-width: 120px; min-width: 56px; height: auto;"/>
+              </div>
+              <br>
+              <span class="eql-cntrb">
+                <small><sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>†</sup>Corresponding author</small>
+              </span>
+            </div>
+
+            <!-- Links -->
+            <div class="column has-text-centered" style="margin-top: 0.5rem;">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="#" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="ai ai-arxiv"></i></span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fab fa-github"></i></span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><span aria-hidden="true">🤗</span></span>
+                    <span>Hugging Face</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       FRAMEWORK (teaser — immediately after hero)
+  ══════════════════════════════════════════════════════════ -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <img src="static/images/framework.png"
+             alt="AdaptSplat architecture diagram"
+             loading="eager"
+             style="border-radius: 8px;"/>
+        <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
+          <strong>AdaptSplat architecture.</strong>
+          DINOv3-ConvNeXt is embedded end-to-end inside the feed-forward 3DGS loop.
+          The Multi-view Transformer, DPT decoder, and Gaussian Heads are task-specific reconstruction modules.
+          FPA extracts high-frequency directional priors via 2D DWT from shallow backbone features and injects them
+          into (i)&nbsp;the Q-K attention space and (ii)&nbsp;the DPT decoder via spatially adaptive residual modulation.
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       ABSTRACT
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Generalizable 3D Gaussian Splatting (3DGS) based on feed-forward inference has become a prominent direction in scene reconstruction. Existing methods mainly follow two paradigms: the first trains specialized networks from scratch; constrained by the scale of 3D datasets, these models generalize poorly to unseen scenes. The second introduces frozen foundation models as visual representation extractors; while this improves generalization, frozen parameters make the extracted features suboptimal for complex 3D geometry, and reliance on deep features induces spectral bias, causing high-frequency geometric details to be over-smoothed. To address these problems, we propose <strong>AdaptSplat</strong>, which adapts the visual foundation model at both the architecture level and the feature level. At the architecture level, DINOv3-ConvNeXt is adopted as the backbone: its convolutional architecture is memory-friendly and supports end-to-end training on standard hardware, while its native multi-scale features provide a natural basis for high-frequency prior extraction. The backbone is embedded as a differentiable component within the feed-forward 3DGS optimization loop, so that gradients from the rendering loss back-propagate directly through it, enabling active adaptation to multi-view geometric constraints. At the feature level, a lightweight <strong>Frequency-Preserving Adapter (FPA)</strong> is introduced, which uses 2D Discrete Wavelet Transform (DWT) to extract direction-aware high-frequency structural priors from shallow features, and injects them into the reconstruction network via a dual mechanism: high-frequency positional encodings are injected into the Q-K attention space of the expert network, and spatially adaptive residual modulation in the decoder resists secondary high-frequency attenuation from interpolation. Extensive experiments show that AdaptSplat achieves state-of-the-art feed-forward reconstruction performance on multiple standard benchmarks, with stable generalization across domains.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       INSIGHT
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Insight</h2>
+      <div class="content has-text-centered">
+        <img src="static/images/intro.png"
+             alt="Comparison of existing paradigms and AdaptSplat"
+             loading="lazy"
+             style="border-radius: 8px; max-width: 62%; display: block; margin: 0 auto;"/>
+        <p style="margin-top: 1rem;">
+          Comparison of existing paradigms and AdaptSplat.
+          (a)&nbsp;Specialized networks trained from scratch suffer from weak generalization due to limited 3D data scale.
+          (b)&nbsp;Frozen foundation models improve generalization but induce spectral bias, over-smoothing high-frequency details.
+          (c)&nbsp;AdaptSplat adapts at <em>both</em> the architecture and feature levels, achieving strong generalization and spectral-unbiasedness simultaneously.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       VIDEO COMPARISON SLIDER
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section vc-section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Visual Comparison</h2>
+      <p class="subtitle-text">
+        Drag the slider left / right to compare <strong>Ours</strong> (left) vs
+        <strong>MVP</strong> (right) on DL3DV scenes.
+        Use the dots below to switch scenes.
+      </p>
+
+      <div class="vc-outer">
+
+        <!-- Overflow-clip comparison container -->
+        <div class="vc-container" id="vc-main">
+          <!-- Ours: in normal flow, drives container height -->
+          <video id="vid-ours" autoplay muted loop playsinline preload="auto">
+            <source src="static/videos/ours/bonsai.mp4" type="video/mp4">
+          </video>
+          <!-- MVP: wrapper div clipped via clip-path (more reliable than clip-path on <video>) -->
+          <div id="mvp-wrapper">
+            <video id="vid-mvp" autoplay muted loop playsinline preload="auto">
+              <source src="static/videos/mvp/bonsai.mp4" type="video/mp4">
+            </video>
+          </div>
+          <span class="vc-label vc-label-ours">Ours</span>
+          <span class="vc-label vc-label-mvp">MVP</span>
+          <div class="vc-handle" id="vc-handle">
+            <div class="vc-handle-btn">◄►</div>
+          </div>
+          <!-- Shown when autoplay is blocked; hidden after user clicks -->
+          <div id="vc-overlay">
+            <button>&#9654; Click to Play</button>
+          </div>
+        </div>
+
+        <!-- Dot navigation -->
+        <div class="scene-nav" id="scene-nav">
+          <button class="scene-dot active" data-target="0" aria-label="Scene 1"></button>
+          <button class="scene-dot" data-target="1" aria-label="Scene 2"></button>
+          <button class="scene-dot" data-target="2" aria-label="Scene 3"></button>
+          <button class="scene-dot" data-target="3" aria-label="Scene 4"></button>
+          <button class="scene-dot" data-target="4" aria-label="Scene 5"></button>
+          <button class="scene-dot" data-target="5" aria-label="Scene 6"></button>
+        </div>
+        <p class="scene-caption" id="scene-caption">Scene 1 / 5</p>
+
+      </div><!-- /vc-outer -->
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       QUANTITATIVE RESULTS
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Quantitative Results</h2>
+
+      <!-- Table 1 -->
+      <div style="margin-bottom: 2.5rem;">
+        <p class="table-title">Table 1: Comparison on RE10K &mdash; 6 input views → ~8 novel views, 256×256</p>
+        <div class="table-scroll">
+          <table class="table is-bordered is-narrow results-table" style="width:auto;margin:0 auto;">
+            <thead>
+              <tr>
+                <th style="text-align:left;min-width:120px;">Method</th>
+                <th style="min-width:72px;">PSNR ↑</th>
+                <th style="min-width:72px;">SSIM ↑</th>
+                <th style="min-width:76px;">LPIPS ↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="text-align:left;">PixelSplat</td><td>28.95</td><td>0.900</td><td>0.163</td></tr>
+              <tr><td style="text-align:left;">MVSplat</td><td>29.13</td><td>0.924</td><td>0.091</td></tr>
+              <tr><td style="text-align:left;">TranSplat</td><td>29.62</td><td>0.928</td><td>0.084</td></tr>
+              <tr><td style="text-align:left;">DepthSplat</td><td>29.68</td><td>0.925</td><td>0.087</td></tr>
+              <tr><td style="text-align:left;">VolSplat</td><td>31.30</td><td>0.941</td><td>0.075</td></tr>
+              <tr><td style="text-align:left;">YoNoSplat</td><td>29.57</td><td>0.919</td><td>0.077</td></tr>
+              <tr><td style="text-align:left;">Long-LRM</td><td>32.66</td><td>0.945</td><td>0.073</td></tr>
+              <tr><td style="text-align:left;">MVP</td><td>32.89</td><td>0.948</td><td>0.067</td></tr>
+              <tr class="ours-row"><td style="text-align:left;">Ours (tiny)</td><td>33.70</td><td>0.955</td><td>0.063</td></tr>
+              <tr class="ours-row"><td style="text-align:left;">Ours (base)</td><td>33.86</td><td>0.956</td><td>0.062</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-caption">AdaptSplat outperforms all baselines on RE10K, with Ours(base) reaching PSNR 33.86 — surpassing the previous best (MVP, 32.89) by nearly +1 dB.</p>
+      </div>
+
+      <!-- Table 2 -->
+      <div style="margin-bottom: 2.5rem;">
+        <p class="table-title">Table 2: Quantitative Results on DL3DV at High Resolution (960×540)</p>
+        <div class="table-scroll">
+          <table class="table is-bordered is-narrow results-table">
+            <thead>
+              <tr>
+                <th style="text-align:left;" rowspan="2">Method</th>
+                <th colspan="3">16 Views</th>
+                <th colspan="3">32 Views</th>
+                <th colspan="3">64 Views</th>
+                <th colspan="3">128 Views</th>
+              </tr>
+              <tr>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:left;">3D-GS (30k)</td>
+                <td>21.48</td><td>0.753</td><td>0.252</td>
+                <td>24.43</td><td>0.827</td><td>0.191</td>
+                <td>27.34</td><td>0.883</td><td>0.146</td>
+                <td>29.43</td><td>0.914</td><td>0.123</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">Long-LRM</td>
+                <td>21.05</td><td>0.708</td><td>0.297</td>
+                <td>23.97</td><td>0.778</td><td>0.267</td>
+                <td>23.60</td><td>0.789</td><td>0.260</td>
+                <td>21.24</td><td>0.739</td><td>0.308</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">iLRM</td>
+                <td>21.92</td><td>0.748</td><td>0.316</td>
+                <td>24.30</td><td>0.803</td><td>0.256</td>
+                <td>24.44</td><td>0.819</td><td>0.240</td>
+                <td>22.98</td><td>0.807</td><td>0.249</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">MVP</td>
+                <td>23.76</td><td>0.798</td><td>0.239</td>
+                <td>25.96</td><td>0.847</td><td>0.187</td>
+                <td>27.73</td><td>0.881</td><td>0.154</td>
+                <td>29.02</td><td>0.903</td><td>0.134</td>
+              </tr>
+              <tr class="ours-row">
+                <td style="text-align:left;">Ours</td>
+                <td>24.06</td><td>0.813</td><td>0.230</td>
+                <td>26.28</td><td>0.860</td><td>0.177</td>
+                <td>27.98</td><td>0.891</td><td>0.145</td>
+                <td>29.27</td><td>0.911</td><td>0.127</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-caption">AdaptSplat consistently outperforms all feed-forward baselines across all view counts on DL3DV at high resolution.</p>
+      </div>
+
+      <!-- Table 3 -->
+      <div style="margin-bottom: 2.5rem;">
+        <p class="table-title">Table 3: Quantitative Results on DL3DV at 280×512 Resolution (Dynamic Views)</p>
+        <div class="table-scroll">
+          <table class="table is-bordered is-narrow results-table">
+            <thead>
+              <tr>
+                <th style="text-align:left;" rowspan="2">Method</th>
+                <th colspan="3">6 Views</th>
+                <th colspan="3">12 Views</th>
+                <th colspan="3">24 Views</th>
+              </tr>
+              <tr>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:left;">MVSplat</td>
+                <td>22.659</td><td>0.760</td><td>0.173</td>
+                <td>21.289</td><td>0.709</td><td>0.224</td>
+                <td>19.975</td><td>0.662</td><td>0.269</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">DepthSplat</td>
+                <td>23.418</td><td>0.797</td><td>0.136</td>
+                <td>21.911</td><td>0.753</td><td>0.179</td>
+                <td>20.088</td><td>0.690</td><td>0.240</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">YoNoSplat</td>
+                <td>24.717</td><td>0.817</td><td>0.139</td>
+                <td>23.285</td><td>0.773</td><td>0.177</td>
+                <td>22.664</td><td>0.758</td><td>0.192</td>
+              </tr>
+              <tr class="ours-row">
+                <td style="text-align:left;">Ours</td>
+                <td>25.795</td><td>0.847</td><td>0.149</td>
+                <td>26.741</td><td>0.864</td><td>0.135</td>
+                <td>26.901</td><td>0.871</td><td>0.132</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-caption">Unlike baselines whose performance degrades as the view count (i.e., scene scale) increases, AdaptSplat demonstrates a steady <em>improvement</em>, confirming its ability to capture long-range features and maintain global geometric consistency.</p>
+      </div>
+
+      <!-- Table 4 -->
+      <div style="margin-bottom: 1rem;">
+        <p class="table-title">Table 4: Zero-Shot Generalization on Tanks&amp;Temples and Mip-NeRF360 (Trained on DL3DV only)</p>
+        <div class="table-scroll">
+          <table class="table is-bordered is-narrow results-table">
+            <thead>
+              <tr>
+                <th style="text-align:left;">Dataset</th>
+                <th style="text-align:left;">Method</th>
+                <th colspan="3">32 Views</th>
+                <th colspan="3">64 Views</th>
+                <th colspan="3">128 Views</th>
+              </tr>
+              <tr>
+                <th></th><th></th>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+                <th>PSNR↑</th><th>SSIM↑</th><th>LPIPS↓</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:left;" rowspan="4">Tanks&amp;Temples</td>
+                <td style="text-align:left;">Long-LRM</td>
+                <td>18.59</td><td>0.614</td><td>0.366</td>
+                <td>19.44</td><td>0.651</td><td>0.334</td>
+                <td>18.47</td><td>0.613</td><td>0.375</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">iLRM</td>
+                <td>18.58</td><td>0.631</td><td>0.385</td>
+                <td>19.82</td><td>0.692</td><td>0.318</td>
+                <td>19.22</td><td>0.696</td><td>0.319</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">MVP</td>
+                <td>19.54</td><td>0.708</td><td>0.277</td>
+                <td>21.24</td><td>0.761</td><td>0.221</td>
+                <td>22.36</td><td>0.804</td><td>0.184</td>
+              </tr>
+              <tr class="ours-row">
+                <td style="text-align:left;">Ours</td>
+                <td>19.80</td><td>0.731</td><td>0.265</td>
+                <td>21.80</td><td>0.789</td><td>0.207</td>
+                <td>22.81</td><td>0.826</td><td>0.171</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;" rowspan="4">Mip-NeRF360</td>
+                <td style="text-align:left;">Long-LRM</td>
+                <td>21.08</td><td>0.484</td><td>0.445</td>
+                <td>21.30</td><td>0.499</td><td>0.431</td>
+                <td>19.82</td><td>0.484</td><td>0.457</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">iLRM</td>
+                <td>21.09</td><td>0.495</td><td>0.466</td>
+                <td>21.60</td><td>0.522</td><td>0.444</td>
+                <td>21.32</td><td>0.551</td><td>0.424</td>
+              </tr>
+              <tr>
+                <td style="text-align:left;">MVP</td>
+                <td>22.21</td><td>0.587</td><td>0.355</td>
+                <td>23.72</td><td>0.656</td><td>0.302</td>
+                <td>25.12</td><td>0.736</td><td>0.248</td>
+              </tr>
+              <tr class="ours-row">
+                <td style="text-align:left;">Ours</td>
+                <td>23.01</td><td>0.633</td><td>0.329</td>
+                <td>24.56</td><td>0.700</td><td>0.273</td>
+                <td>25.60</td><td>0.756</td><td>0.231</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-caption">AdaptSplat consistently surpasses all baselines on two unseen datasets without any fine-tuning, demonstrating strong cross-domain generalization. On Mip-NeRF360, PSNR improvements over MVP reach +0.80 / +0.84 / +0.48 dB at 32/64/128 views.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       QUALITATIVE RESULTS
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Qualitative Results</h2>
+
+      <div class="content">
+        <img src="static/images/visual_re10k.png"
+             alt="Qualitative comparison on RE10K"
+             loading="lazy"
+             style="border-radius: 8px; margin-bottom: 0.5rem;"/>
+        <p class="has-text-centered">
+          <strong>RE10K visual comparison.</strong>
+          AdaptSplat produces sharper boundaries and finer texture details compared to Long-LRM and MVP.
+        </p>
+
+        <img src="static/images/visual_dl3dv.png"
+             alt="Qualitative comparison on DL3DV"
+             loading="lazy"
+             style="border-radius: 8px; margin-top: 1.5rem; margin-bottom: 0.5rem;"/>
+        <p class="has-text-centered">
+          <strong>DL3DV qualitative comparison.</strong>
+          AdaptSplat yields superior high-frequency fidelity and sharper geometric boundaries.
+          On complex scenes such as overlapping glassware or high-frequency tabletop textures,
+          Long-LRM and MVP exhibit noticeable blurring, while AdaptSplat closely matches the ground truth.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       BIBTEX
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section hero is-light" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <div class="bibtex-header">
+        <h2 class="title">BibTeX</h2>
+        <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+          <i class="fas fa-copy"></i>
+          <span class="copy-text">Copy</span>
+        </button>
+      </div>
+      <pre id="bibtex-code"><code>@article{xing2026adaptsplat,
+  title   = {AdaptSplat: Adapting Vision Foundation Models for Feed-Forward 3D Gaussian Splatting},
+  author  = {Xing, Mingwei and Wang, Xinliang and Shi, Yifeng},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</code></pre>
+    </div>
+  </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content has-text-centered">
+            <p>
+              This page was built using the
+              <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>
+              adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+              Licensed under a
+              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
+                Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════
+       VIDEO COMPARISON + SCENE NAV JAVASCRIPT
+  ══════════════════════════════════════════════════════════ -->
+  <script>
+  (function () {
+    var SCENES = [
+      'bonsai',
+      'kitchen',
+      'room',
+      'Train',
+      'counter'
+    ];
+    var currentScene = 0;
+    var isDragging = false;
+
+    // ── apply split position ──────────────────────────────────
+    // clip-path: inset(0 0 0 X%) reveals only the right (100-X)% of the wrapper
+    function applySlider(splitPct) {
+      var wrapper = document.getElementById('mvp-wrapper');
+      var handle  = document.getElementById('vc-handle');
+      if (wrapper) wrapper.style.clipPath = 'inset(0 0 0 ' + splitPct + '%)';
+      if (handle)  handle.style.left = splitPct + '%';
+    }
+
+    // ── play both videos ──────────────────────────────────────
+    function startVideos() {
+      var oV = document.getElementById('vid-ours');
+      var mV = document.getElementById('vid-mvp');
+      if (oV) { oV.muted = true; oV.playbackRate = 0.4; oV.play().catch(function () {}); }
+      if (mV) { mV.muted = true; mV.playbackRate = 0.4; mV.play().catch(function () {}); }
+    }
+
+    // ── get split % from pointer clientX ─────────────────────
+    function pctFromX(clientX) {
+      var c = document.getElementById('vc-main');
+      var r = c.getBoundingClientRect();
+      return Math.max(2, Math.min(98, (clientX - r.left) / r.width * 100));
+    }
+
+    // ── scene switching ───────────────────────────────────────
+    function switchScene(target) {
+      if (target === currentScene) return;
+      currentScene = target;
+      var oV   = document.getElementById('vid-ours');
+      var mV   = document.getElementById('vid-mvp');
+      var hash = SCENES[target];
+      oV.src = 'static/videos/ours/' + hash + '.mp4';
+      mV.src = 'static/videos/mvp/'  + hash + '.mp4';
+      oV.load(); mV.load();
+      startVideos();
+      applySlider(50);
+      document.querySelectorAll('.scene-dot').forEach(function (d) {
+        d.classList.toggle('active', parseInt(d.dataset.target) === target);
+      });
+      var cap = document.getElementById('scene-caption');
+      if (cap) cap.textContent = 'Scene ' + (target + 1) + ' / ' + SCENES.length;
+    }
+
+    // ── boot ─────────────────────────────────────────────────
+    function boot() {
+      var container = document.getElementById('vc-main');
+      if (!container) return;
+
+      applySlider(50);
+
+      // Drag to slide (ignore clicks on overlay)
+      container.addEventListener('mousedown', function (e) {
+        var ov = document.getElementById('vc-overlay');
+        if (ov && ov.contains(e.target)) return;
+        isDragging = true;
+        applySlider(pctFromX(e.clientX));
+        e.preventDefault();
+      });
+      document.addEventListener('mousemove', function (e) {
+        if (isDragging) applySlider(pctFromX(e.clientX));
+      });
+      document.addEventListener('mouseup', function () { isDragging = false; });
+
+      container.addEventListener('touchstart', function (e) {
+        isDragging = true;
+        applySlider(pctFromX(e.touches[0].clientX));
+      }, { passive: true });
+      document.addEventListener('touchmove', function (e) {
+        if (isDragging) applySlider(pctFromX(e.touches[0].clientX));
+      }, { passive: true });
+      document.addEventListener('touchend', function () { isDragging = false; });
+
+      // Dot navigation
+      document.querySelectorAll('.scene-dot').forEach(function (dot) {
+        dot.addEventListener('click', function () {
+          switchScene(parseInt(dot.dataset.target));
+        });
+      });
+
+      var overlay = document.getElementById('vc-overlay');
+      var oV = document.getElementById('vid-ours');
+      var mV = document.getElementById('vid-mvp');
+
+      // Overlay click: called inside a user-gesture stack so .play() always works
+      if (overlay) {
+        overlay.addEventListener('click', function () {
+          overlay.style.display = 'none';
+          if (oV) { oV.playbackRate = 0.4; oV.play(); }
+          if (mV) { mV.playbackRate = 0.4; mV.play(); }
+        });
+      }
+
+      // Try autoplay; show overlay only if the browser blocks it
+      if (oV) {
+        oV.muted = true;
+        oV.playbackRate = 0.4;
+        var p = oV.play();
+        if (p !== undefined) {
+          p.then(function () {
+            if (mV) { mV.muted = true; mV.playbackRate = 0.4; mV.play().catch(function () {}); }
+            if (overlay) overlay.style.display = 'none';
+          }).catch(function () {
+            if (overlay) overlay.style.display = 'flex';
+          });
+        }
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+  </script>
+
+</body>
+</html>

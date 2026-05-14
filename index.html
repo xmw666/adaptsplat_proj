@@ -3,475 +3,627 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- Primary Meta Tags -->
-  <!-- TODO: Replace with your paper title and author names -->
-  <meta name="title" content="PAPER_TITLE - AUTHOR_NAMES">
-  <!-- TODO: Write a compelling 150-160 character description of your research -->
-  <meta name="description" content="BRIEF_DESCRIPTION_OF_YOUR_RESEARCH_CONTRIBUTION_AND_FINDINGS">
-  <!-- TODO: Add 5-10 relevant keywords for your research area -->
-  <meta name="keywords" content="KEYWORD1, KEYWORD2, KEYWORD3, machine learning, computer vision, AI">
-  <!-- TODO: List all authors -->
-  <meta name="author" content="FIRST_AUTHOR_NAME, SECOND_AUTHOR_NAME">
+
+  <meta name="title" content="AdaptSplat: Adapting Vision Foundation Models for Feed-Forward 3D Gaussian Splatting">
+  <meta name="description" content="AdaptSplat adapts vision foundation models at both architecture and feature levels for state-of-the-art feed-forward 3D Gaussian Splatting reconstruction.">
+  <meta name="keywords" content="3D Gaussian Splatting, Feed-Forward Reconstruction, Foundation Models, DINOv3-ConvNeXt, Frequency-Preserving Adapter, Novel View Synthesis">
+  <meta name="author" content="Mingwei Xing, Xinliang Wang, Yifeng Shi">
   <meta name="robots" content="index, follow">
-  <meta name="language" content="English">
-  
-  <!-- Open Graph / Facebook -->
+
   <meta property="og:type" content="article">
-  <!-- TODO: Replace with your institution or lab name -->
-  <meta property="og:site_name" content="INSTITUTION_OR_LAB_NAME">
-  <!-- TODO: Same as paper title above -->
-  <meta property="og:title" content="PAPER_TITLE">
-  <!-- TODO: Same as description above -->
-  <meta property="og:description" content="BRIEF_DESCRIPTION_OF_YOUR_RESEARCH_CONTRIBUTION_AND_FINDINGS">
-  <!-- TODO: Replace with your actual website URL -->
-  <meta property="og:url" content="https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE">
-  <!-- TODO: Create a 1200x630px preview image and update path -->
-  <meta property="og:image" content="https://YOUR_DOMAIN.com/static/images/social_preview.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="PAPER_TITLE - Research Preview">
-  <meta property="article:published_time" content="2024-01-01T00:00:00.000Z">
-  <meta property="article:author" content="FIRST_AUTHOR_NAME">
-  <meta property="article:section" content="Research">
-  <meta property="article:tag" content="KEYWORD1">
-  <meta property="article:tag" content="KEYWORD2">
+  <meta property="og:site_name" content="Ke Holdings Inc.">
+  <meta property="og:title" content="AdaptSplat: Adapting Vision Foundation Models for Feed-Forward 3D Gaussian Splatting">
+  <meta property="og:description" content="AdaptSplat adapts the visual foundation model at both architecture and feature levels for state-of-the-art feed-forward 3DGS reconstruction with stable cross-domain generalization.">
+  <meta property="og:url" content="#">
+  <meta property="og:image" content="static/images/intro.png">
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <!-- TODO: Replace with your lab/institution Twitter handle -->
-  <meta name="twitter:site" content="@YOUR_TWITTER_HANDLE">
-  <!-- TODO: Replace with first author's Twitter handle -->
-  <meta name="twitter:creator" content="@AUTHOR_TWITTER_HANDLE">
-  <!-- TODO: Same as paper title above -->
-  <meta name="twitter:title" content="PAPER_TITLE">
-  <!-- TODO: Same as description above -->
-  <meta name="twitter:description" content="BRIEF_DESCRIPTION_OF_YOUR_RESEARCH_CONTRIBUTION_AND_FINDINGS">
-  <!-- TODO: Same as social preview image above -->
-  <meta name="twitter:image" content="https://YOUR_DOMAIN.com/static/images/social_preview.png">
-  <meta name="twitter:image:alt" content="PAPER_TITLE - Research Preview">
+  <meta name="citation_title" content="AdaptSplat: Adapting Vision Foundation Models for Feed-Forward 3D Gaussian Splatting">
+  <meta name="citation_author" content="Xing, Mingwei">
+  <meta name="citation_author" content="Wang, Xinliang">
+  <meta name="citation_author" content="Shi, Yifeng">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="">
 
-  <!-- Academic/Research Specific -->
-  <meta name="citation_title" content="PAPER_TITLE">
-  <meta name="citation_author" content="FIRST_AUTHOR_LAST, FIRST_AUTHOR_FIRST">
-  <meta name="citation_author" content="SECOND_AUTHOR_LAST, SECOND_AUTHOR_FIRST">
-  <meta name="citation_publication_date" content="2024">
-  <meta name="citation_conference_title" content="CONFERENCE_NAME">
-  <meta name="citation_pdf_url" content="https://YOUR_DOMAIN.com/static/pdfs/paper.pdf">
-  
-  <!-- Additional SEO -->
   <meta name="theme-color" content="#2563eb">
-  <meta name="msapplication-TileColor" content="#2563eb">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  
-  <!-- Preconnect for performance -->
+
+  <title>AdaptSplat</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://ajax.googleapis.com">
-  <link rel="preconnect" href="https://documentcloud.adobe.com">
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
-
-  <!-- TODO: Replace with your paper title and authors -->
-  <title>PAPER_TITLE - AUTHOR_NAMES | Academic Research</title>
-  
-  <!-- Favicon and App Icons -->
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
-  <link rel="apple-touch-icon" href="static/images/favicon.ico">
-  
-  <!-- Critical CSS - Load synchronously -->
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/index.css">
-  
-  <!-- Non-critical CSS - Load asynchronously -->
   <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  
-  <!-- Fallback for browsers that don't support preload -->
   <noscript>
     <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
-    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
     <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   </noscript>
-  
-  <!-- Fonts - Optimized loading -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Defer non-critical JavaScript -->
+
   <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
   <script defer src="static/js/fontawesome.all.min.js"></script>
   <script defer src="static/js/bulma-carousel.min.js"></script>
   <script defer src="static/js/bulma-slider.min.js"></script>
   <script defer src="static/js/index.js"></script>
-  
-  <!-- Structured Data for Academic Papers -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ScholarlyArticle",
-    "headline": "PAPER_TITLE",
-    "description": "BRIEF_DESCRIPTION_OF_YOUR_RESEARCH_CONTRIBUTION_AND_FINDINGS",
-    "author": [
-      {
-        "@type": "Person",
-        "name": "FIRST_AUTHOR_NAME",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "INSTITUTION_NAME"
-        }
-      },
-      {
-        "@type": "Person",
-        "name": "SECOND_AUTHOR_NAME",
-        "affiliation": {
-          "@type": "Organization",
-          "name": "INSTITUTION_NAME"
-        }
-      }
-    ],
-    "datePublished": "2024-01-01",
-    "publisher": {
-      "@type": "Organization",
-      "name": "CONFERENCE_OR_JOURNAL_NAME"
-    },
-    "url": "https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE",
-    "image": "https://YOUR_DOMAIN.com/static/images/social_preview.png",
-    "keywords": ["KEYWORD1", "KEYWORD2", "KEYWORD3", "machine learning", "computer vision"],
-    "abstract": "FULL_ABSTRACT_TEXT_HERE",
-    "citation": "BIBTEX_CITATION_HERE",
-    "isAccessibleForFree": true,
-    "license": "https://creativecommons.org/licenses/by/4.0/",
-    "mainEntity": {
-      "@type": "WebPage",
-      "@id": "https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE"
-    },
-    "about": [
-      {
-        "@type": "Thing",
-        "name": "RESEARCH_AREA_1"
-      },
-      {
-        "@type": "Thing", 
-        "name": "RESEARCH_AREA_2"
-      }
-    ]
-  }
-  </script>
-  
-  <!-- Website/Organization Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "INSTITUTION_OR_LAB_NAME",
-    "url": "https://YOUR_INSTITUTION_WEBSITE.com",
-    "logo": "https://YOUR_DOMAIN.com/static/images/favicon.ico",
-    "sameAs": [
-      "https://twitter.com/YOUR_TWITTER_HANDLE",
-      "https://github.com/YOUR_GITHUB_USERNAME"
-    ]
-  }
-  </script>
+
+  <style>
+    /* ── Video Player ────────────────────────────────────────── */
+    .vc-section {
+      background: #f5f7fa;
+      padding: 3.5rem 0 2.5rem;
+    }
+    .vc-section .subtitle-text {
+      color: #555;
+      text-align: center;
+      margin-bottom: 1.8rem;
+      font-size: 1rem;
+    }
+    .vc-outer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    .vc-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #000;
+      cursor: ew-resize;
+      line-height: 0;
+    }
+    #vc-canvas-a {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+    #vid-ours-a, #vid-ours-a-buf { display: none; }
+    /* ── Section B: Canvas-based slider ─────────────────────── */
+    .video-slider-wrapper-b {
+      position: relative;
+      width: 100%;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: ew-resize;
+    }
+    .video-canvas-b {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .slider-bar-b {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 3px;
+      background: rgba(255,255,255,0.9);
+      transform: translateX(-50%);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .slider-handle-b {
+      position: absolute;
+      top: 50%;
+      width: 44px; height: 44px;
+      background: #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 11;
+      pointer-events: none;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center;
+      color: #333; font-size: 12px; font-weight: 700; letter-spacing: -1px;
+      user-select: none;
+    }
+    .video-label-b {
+      position: absolute;
+      bottom: 10px;
+      padding: 5px 12px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
+      z-index: 12;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+    .video-label-left-b  { left: 12px; }
+    .video-label-right-b { right: 12px; }
+    /* Click-to-play overlay — shown when autoplay is blocked */
+    #vc-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.38);
+      z-index: 20;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    #vc-overlay button {
+      background: rgba(255,255,255,0.92);
+      color: #111;
+      border: none;
+      padding: 13px 30px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.28);
+      pointer-events: all;
+    }
+
+    /* ── Scene Navigation ────────────────────────────────────── */
+    .scene-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 1.4rem;
+    }
+    .scene-nav-arrow {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: #ddd;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #555;
+      transition: background 0.2s, color 0.2s;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .scene-nav-arrow:hover {
+      background: #aaa;
+      color: #111;
+    }
+    .scene-dot-a, .scene-dot-b {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: #bbb;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .scene-dot-a.active, .scene-dot-b.active {
+      background: #333;
+      transform: scale(1.35);
+    }
+    .scene-dot-a:hover:not(.active), .scene-dot-b:hover:not(.active) {
+      background: #888;
+    }
+    /* Auto-advance progress bar */
+    .scene-progress {
+      margin: 0.7rem auto 0;
+      max-width: 900px;
+      padding: 0 1rem;
+    }
+    .scene-progress-track {
+      height: 3px;
+      background: #ddd;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .scene-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #666;
+      border-radius: 2px;
+    }
+    .scene-progress-fill.running {
+      width: 100%;
+      transition: width 4s linear;
+    }
+
+    /* ── Results Tables ──────────────────────────────────────── */
+    .results-table {
+      font-size: 0.88rem;
+      width: 100%;
+    }
+    .results-table thead th {
+      background: #f5f5f5;
+      text-align: center;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+    .results-table tbody td {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .results-table tbody tr:last-child td {
+      font-weight: 700;
+      background: #fffbe6;
+    }
+    .results-table tbody tr.ours-row td {
+      font-weight: 700;
+      background: #fffbe6;
+    }
+    .table-caption {
+      font-size: 0.9rem;
+      color: #555;
+      text-align: center;
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .table-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      text-align: center;
+    }
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Section spacing tweak ──────────────────────────────── */
+    .section-gap { margin-bottom: 0; }
+
+    /* ── Pause button (top-right inside canvas video) ──────────── */
+    .video-toggle-btn-b {
+      position: absolute;
+      top: 10px; right: 10px;
+      z-index: 13;
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.75);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      pointer-events: all;
+      line-height: 1;
+    }
+    .video-toggle-btn-b:hover { background: rgba(255,255,255,0.95); }
+
+    /* ── Compare-mode toggle button ──────────────────────────── */
+    .video-change-button {
+      background: rgba(70,70,70,0.82);
+      border: none;
+      border-radius: 20px;
+      padding: 7px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s;
+    }
+    .video-change-button:hover { background: rgba(40,40,40,0.95); }
+
+    /* ── Page loading overlay ── */
+    #page-loading {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      transition: opacity 0.6s ease;
+    }
+    #page-loading.done {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .pl-title {
+      font-size: 1rem;
+      color: #555;
+      letter-spacing: 0.06em;
+      margin: 0;
+    }
+    .pl-track {
+      width: 300px;
+      height: 5px;
+      background: #e5e7eb;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .pl-fill {
+      height: 100%;
+      width: 0%;
+      background: #3b82f6;
+      border-radius: 99px;
+      transition: width 0.25s ease;
+    }
+    .pl-pct {
+      font-size: 0.82rem;
+      color: #999;
+      margin: 0;
+    }
+
+  </style>
 </head>
 <body>
 
+  <!-- Page loading overlay -->
+  <div id="page-loading">
+    <p class="pl-title">Loading resources…</p>
+    <div class="pl-track"><div class="pl-fill" id="pl-fill"></div></div>
+    <p class="pl-pct" id="pl-pct">0 / 15</p>
+  </div>
 
-  <!-- Scroll to Top Button -->
   <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
     <i class="fas fa-chevron-up"></i>
   </button>
 
-  <!-- More Works Dropdown -->
-  <div class="more-works-container">
-    <button class="more-works-btn" onclick="toggleMoreWorks()" title="View More Works from Our Lab">
-      <i class="fas fa-flask"></i>
-      More Works
-      <i class="fas fa-chevron-down dropdown-arrow"></i>
-    </button>
-    <div class="more-works-dropdown" id="moreWorksDropdown">
-      <div class="dropdown-header">
-        <h4>More Works from Our Lab</h4>
-        <button class="close-btn" onclick="toggleMoreWorks()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="works-list">
-        <!-- TODO: Replace with your lab's related works -->
-        <a href="https://arxiv.org/abs/PAPER_ID_1" class="work-item" target="_blank">
-          <div class="work-info">
-            <!-- TODO: Replace with actual paper title -->
-            <h5>Paper Title 1</h5>
-            <!-- TODO: Replace with brief description -->
-            <p>Brief description of the work and its main contribution.</p>
-            <!-- TODO: Replace with venue and year -->
-            <span class="work-venue">Conference/Journal 2024</span>
-          </div>
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-        <!-- TODO: Add more related works or remove extra items -->
-        <a href="https://arxiv.org/abs/PAPER_ID_2" class="work-item" target="_blank">
-          <div class="work-info">
-            <h5>Paper Title 2</h5>
-            <p>Brief description of the work and its main contribution.</p>
-            <span class="work-venue">Conference/Journal 2023</span>
-          </div>
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-        <a href="https://arxiv.org/abs/PAPER_ID_3" class="work-item" target="_blank">
-          <div class="work-info">
-            <h5>Paper Title 3</h5>
-            <p>Brief description of the work and its main contribution.</p>
-            <span class="work-venue">Conference/Journal 2023</span>
-          </div>
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-
   <main id="main-content">
+
+  <!-- ══════════════════════════════════════════════════════════
+       HERO / TITLE
+  ══════════════════════════════════════════════════════════ -->
   <section class="hero">
     <div class="hero-body">
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <!-- TODO: Replace with your paper title -->
-            <h1 class="title is-1 publication-title">Academic Project Page</h1>
+
+            <h1 class="title is-2 publication-title">
+              AdaptSplat: Adapting Vision Foundation Models for Feed-Forward 3D Gaussian Splatting
+            </h1>
+
             <div class="is-size-5 publication-authors">
-              <!-- TODO: Replace with your paper authors and their personal links -->
-              <span class="author-block">
-                <a href="FIRST AUTHOR PERSONAL LINK" target="_blank">First Author</a><sup>*</sup>,</span>
-                <span class="author-block">
-                  <a href="SECOND AUTHOR PERSONAL LINK" target="_blank">Second Author</a><sup>*</sup>,</span>
-                  <span class="author-block">
-                    <a href="THIRD AUTHOR PERSONAL LINK" target="_blank">Third Author</a>
-                  </span>
-                  </div>
+              <span class="author-block">Mingwei Xing<sup>*</sup>,</span>
+              <span class="author-block">Xinliang Wang<sup>*</sup>,</span>
+              <span class="author-block">Yifeng Shi<sup>†</sup></span>
+            </div>
 
-                  <div class="is-size-5 publication-authors">
-                    <!-- TODO: Replace with your institution and conference/journal info -->
-                    <span class="author-block">Institution Name<br>Conference name and year</span>
-                    <!-- TODO: Remove this line if no equal contribution -->
-                    <span class="eql-cntrb"><small><br><sup>*</sup>Indicates Equal Contribution</small></span>
-                  </div>
+            <div class="is-size-5 publication-authors" style="margin-top: 0.5rem;">
+              <div style="display: inline-flex; align-items: center; justify-content: center; gap: 10px;">
+                <span style="margin: 0;">Ke Holdings Inc.</span>
+                <img src="static/images/ke_logo.png" alt="KE Logo"
+                     style="width: 10vw; max-width: 120px; min-width: 56px; height: auto;"/>
+              </div>
+              <br>
+              <span class="eql-cntrb">
+                <small><sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>†</sup>Corresponding author</small>
+              </span>
+            </div>
 
-                  <div class="column has-text-centered">
-                    <div class="publication-links">
-                         <!-- TODO: Update with your arXiv paper ID -->
-                      <span class="link-block">
-                        <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
-                        class="external-link button is-normal is-rounded is-dark">
-                        <span class="icon">
-                          <i class="fas fa-file-pdf"></i>
-                        </span>
-                        <span>Paper</span>
-                      </a>
-                    </span>
-
-                    <!-- TODO: Add your supplementary material PDF or remove this section -->
-                    <span class="link-block">
-                      <a href="static/pdfs/supplementary_material.pdf" target="_blank"
-                      class="external-link button is-normal is-rounded is-dark">
-                      <span class="icon">
-                        <i class="fas fa-file-pdf"></i>
-                      </span>
-                      <span>Supplementary</span>
-                    </a>
-                  </span>
-
-                  <!-- TODO: Replace with your GitHub repository URL -->
-                  <span class="link-block">
-                    <a href="https://github.com/YOUR REPO HERE" target="_blank"
-                    class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon">
-                      <i class="fab fa-github"></i>
-                    </span>
+            <!-- Links -->
+            <div class="column has-text-centered" style="margin-top: 0.5rem;">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2605.10239" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="ai ai-arxiv"></i></span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/xmw666/AdaptSplat" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fab fa-github"></i></span>
                     <span>Code</span>
                   </a>
                 </span>
-
-                <!-- TODO: Update with your arXiv paper ID -->
                 <span class="link-block">
-                  <a href="https://arxiv.org/abs/<ARXIV PAPER ID>" target="_blank"
-                  class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                </a>
-              </span>
+                  <a href="https://huggingface.co/koun123/AdaptSplat/tree/main" target="_blank"
+                     class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><span aria-hidden="true">🤗</span></span>
+                    <span>Hugging Face</span>
+                  </a>
+                </span>
+              </div>
             </div>
+
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- Teaser video-->
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <!-- TODO: Replace with your teaser video -->
-      <video poster="" id="tree" autoplay controls muted loop height="100%" preload="metadata">
-        <!-- TODO: Add your video file path here -->
-        <source src="static/videos/banner_video.mp4" type="video/mp4">
-      </video>
-      <!-- TODO: Replace with your video description -->
-      <h2 class="subtitle has-text-centered">
-        Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
-      </h2>
-    </div>
-  </div>
-</section>
-<!-- End teaser video -->
-
-<!-- Paper abstract -->
-<section class="section hero is-light">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <!-- TODO: Replace with your paper abstract -->
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ullamcorper tellus sed ante aliquam tempus. Etiam porttitor urna feugiat nibh elementum, et tempor dolor mattis. Donec accumsan enim augue, a vulputate nisi sodales sit amet. Proin bibendum ex eget mauris cursus euismod nec et nibh. Maecenas ac gravida ante, nec cursus dui. Vivamus purus nibh, placerat ac purus eget, sagittis vestibulum metus. Sed vestibulum bibendum lectus gravida commodo. Pellentesque auctor leo vitae sagittis suscipit.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End paper abstract -->
-
-
-<!-- Image carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
-        <!-- TODO: Replace with your research result images -->
-        <img src="static/images/carousel1.jpg" alt="First research result visualization" loading="lazy"/>
-        <!-- TODO: Replace with description of this result -->
-        <h2 class="subtitle has-text-centered">
-          First image description.
-        </h2>
-      </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel2.jpg" alt="Second research result visualization" loading="lazy"/>
-        <h2 class="subtitle has-text-centered">
-          Second image description.
-        </h2>
-      </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel3.jpg" alt="Third research result visualization" loading="lazy"/>
-        <h2 class="subtitle has-text-centered">
-         Third image description.
-       </h2>
-     </div>
-     <div class="item">
-      <!-- Your image here -->
-      <img src="static/images/carousel4.jpg" alt="Fourth research result visualization" loading="lazy"/>
-      <h2 class="subtitle has-text-centered">
-        Fourth image description.
-      </h2>
-    </div>
-  </div>
-</div>
-</div>
-</section>
-<!-- End image carousel -->
-
-
-
-
-<!-- Youtube video -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <!-- Paper video. -->
-      <h2 class="title is-3">Video Presentation</h2>
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          
-          <div class="publication-video">
-            <!-- TODO: Replace with your YouTube video ID -->
-            <iframe src="https://www.youtube.com/embed/JkaxUblCGz0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End youtube video -->
-
-
-<!-- Video carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Another Carousel</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-video1">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video1" controls muted loop height="100%" preload="metadata">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel1.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video2">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video2" controls muted loop height="100%" preload="metadata">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel2.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video3">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video3" controls muted loop height="100%" preload="metadata">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel3.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End video carousel -->
-
-
-
-
-
-
-<!-- Paper poster -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title">Poster</h2>
-
-      <!-- TODO: Replace with your poster PDF -->
-      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
-          </iframe>
-        
       </div>
     </div>
   </section>
-<!--End paper poster -->
 
+  <!-- ══════════════════════════════════════════════════════════
+       ABSTRACT
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              This work explores a simple yet powerful lightweight adapter design for feed-forward 3D Gaussian
+              Splatting (3DGS). Existing methods typically apply complex, architecture-specific designs on top of
+              the generic pipeline of image feature extraction &rarr; multi-view interaction &rarr; feature decoding.
+              However, constrained by the scale bottleneck of 3D training data and the low-pass filtering effect of
+              deep networks, these methods still fall short in cross-domain generalization and high-frequency
+              geometric fidelity.
+              To address these problems, we propose <strong>AdaptSplat</strong>, which demonstrates that without
+              complex component engineering, introducing a single adapter of only 1.5M parameters into the generic
+              architecture is sufficient to achieve superior performance. Specifically, we design a lightweight
+              <strong>Frequency-Preserving Adapter (FPA)</strong> that extracts direction-aware high-frequency
+              structural priors from the shallow features of a powerful vision foundation model backbone, and
+              seamlessly integrates them into the generic pipeline via high-frequency positional encodings and
+              adaptive residual modulation. This effectively compensates for the high-frequency attenuation caused
+              by over-smoothing in deep features, improving the fitting accuracy of Gaussian primitives on complex
+              surfaces and sharp boundaries.
+              Extensive experiments demonstrate that AdaptSplat achieves state-of-the-art feed-forward
+              reconstruction performance on multiple standard benchmarks, with stable generalization across domains.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- ══════════════════════════════════════════════════════════
+       DL3DV VIDEO RESULTS (ours only)
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section vc-section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Visual Results</h2>
+      <p class="subtitle-text">
+        Novel view synthesis results on DL3DV scenes (128 input views).
+        Use the arrows or dots below to navigate between scenes.
+      </p>
 
-<!--BibTex citation -->
-  <section class="section" id="BibTeX">
+      <div class="vc-outer">
+        <div class="vc-container" id="vc-main-a" style="cursor:default;">
+          <canvas id="vc-canvas-a" width="1920" height="1080"></canvas>
+          <video id="vid-ours-a" muted loop playsinline preload="auto" style="display:none;">
+            <source src="static/videos_dl3dv/ours/0a485338bbdaf19ba9090b874bb36ef0599a9c9a475a382c22903cf5981c6ea6.mp4" type="video/mp4">
+          </video>
+          <video id="vid-ours-a-buf" muted loop playsinline preload="auto" style="display:none;"></video>
+          <div id="vc-overlay-a">
+            <button>&#9654; Click to Play</button>
+          </div>
+        </div>
+        <div class="scene-nav">
+          <button class="scene-nav-arrow" id="scene-prev-a">&#8249;</button>
+          <button class="scene-dot-a active" data-target="0"></button>
+          <button class="scene-dot-a" data-target="1"></button>
+          <button class="scene-dot-a" data-target="2"></button>
+          <button class="scene-dot-a" data-target="3"></button>
+          <button class="scene-dot-a" data-target="4"></button>
+          <button class="scene-nav-arrow" id="scene-next-a">&#8250;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SLIDER COMPARISON (ours vs Long-LRM / MVP)
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section vc-section" style="background:#eef1f5;">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Visual Comparison</h2>
+      <p class="subtitle-text">
+        Drag the slider to compare <strong>Ours</strong> (left) vs the selected method (right).
+        Use the arrows or dots below to switch scenes.
+      </p>
+
+      <div class="vc-outer">
+        <!-- Canvas-based slider wrapper -->
+        <div class="video-slider-wrapper-b" id="vc-main-b">
+          <!-- Left video: Ours -->
+          <video class="vid-left-b" muted autoplay loop playsinline preload="auto" disablepictureinpicture disableremoteplayback style="display:none;">
+            <source src="static/videos/ours/bonsai.mp4" type="video/mp4">
+          </video>
+          <!-- Right videos: Long-LRM (default) + MVP (preloaded) -->
+          <video class="vid-right-llrm" muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback src="static/videos/longlrm/bonsai.mp4" style="display:none;"></video>
+          <video class="vid-right-mvp"  muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback src="static/videos/mvp/bonsai.mp4"     style="display:none;"></video>
+          <!-- Canvas renders both videos -->
+          <canvas class="video-canvas-b"></canvas>
+          <!-- Slider bar + handle -->
+          <div class="slider-bar-b"    style="left:50%;"></div>
+          <div class="slider-handle-b" style="left:50%;">◄►</div>
+          <!-- Labels -->
+          <div class="video-label-b video-label-left-b"><span style="color:#A8D18D;">Ours</span></div>
+          <div class="video-label-b video-label-right-b"><span id="vc-label-right-b" style="color:#7E98F7;">Long-LRM</span></div>
+          <!-- Pause/play button -->
+          <button class="video-toggle-btn-b" id="vc-pause-btn-b" title="Pause/Play">▶</button>
+        </div>
+
+        <div class="scene-nav">
+          <button class="scene-nav-arrow" id="scene-prev-b">&#8249;</button>
+          <button class="scene-dot-b active" data-target="0"></button>
+          <button class="scene-dot-b" data-target="1"></button>
+          <button class="scene-dot-b" data-target="2"></button>
+          <button class="scene-dot-b" data-target="3"></button>
+          <button class="scene-dot-b" data-target="4"></button>
+          <button class="scene-nav-arrow" id="scene-next-b">&#8250;</button>
+        </div>
+        <div style="text-align: center; margin-top: 0.6rem;">
+          <button class="video-change-button" id="vc-compare-btn-b" style="color:#fdfffb;">Click to compare with <span style="color:#FCA55EFF">MVP</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       INSIGHT
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Insight</h2>
+      <div class="content has-text-centered">
+        <img src="static/images/intro.png"
+             alt="Comparison of existing paradigms and AdaptSplat"
+             loading="lazy"
+             style="border-radius: 8px; max-width: 62%; display: block; margin: 0 auto;"/>
+        <p style="margin-top: 1rem; text-align: justify; max-width: 62%; margin-left: auto; margin-right: auto;">
+          <strong>Paradigm comparison.</strong>
+          Unlike (a) existing methods that struggle with weak generalization and spectral bias due to complex
+          component designs, (b) AdaptSplat introduces a minimalist adaptation paradigm. It utilizes a single
+          lightweight adapter to efficiently activate VFM priors, achieving superior generalization and
+          high-fidelity reconstruction.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       METHOD
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Method</h2>
+      <div class="hero-body" style="padding-top: 0;">
+        <img src="static/images/framework.png"
+             alt="AdaptSplat architecture diagram"
+             loading="eager"
+             style="border-radius: 8px;"/>
+        <h2 class="subtitle has-text-justified" style="margin-top: 1rem; text-align: justify;">
+          <strong>Overview of AdaptSplat.</strong>
+          Based on the generic feature extraction-interaction-decoding pipeline, AdaptSplat introduces a lightweight
+          Frequency-Preserving Adapter (FPA, 1.5M parameters). FPA explicitly extracts high-frequency structural priors
+          to combat the network's spectral bias. These priors are then injected into the Multi-view Transformer as
+          frequency-guided positional encodings (PE) and into the DPT decoder via multi-scale adaptive residual
+          modulation, significantly sharpening the 3D Gaussian primitives.
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       QUALITATIVE RESULTS
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Qualitative Results</h2>
+
+      <div class="content">
+        <img src="static/images/visual_re10k.png"
+             alt="Qualitative comparison on RE10K"
+             loading="lazy"
+             style="border-radius: 8px; margin-bottom: 0.5rem;"/>
+        <p class="has-text-centered">
+          <strong>RE10K visual comparison.</strong>
+          AdaptSplat produces sharper boundaries and finer texture details compared to Long-LRM and MVP.
+        </p>
+
+        <img src="static/images/visual_dl3dv.png"
+             alt="Qualitative comparison on DL3DV"
+             loading="lazy"
+             style="border-radius: 8px; margin-top: 1.5rem; margin-bottom: 0.5rem;"/>
+        <p class="has-text-centered">
+          <strong>DL3DV qualitative comparison.</strong>
+          AdaptSplat yields superior high-frequency fidelity and sharper geometric boundaries.
+          On complex scenes such as overlapping glassware or high-frequency tabletop textures,
+          Long-LRM and MVP exhibit noticeable blurring, while AdaptSplat closely matches the ground truth.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       BIBTEX
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section hero is-light" id="BibTeX">
     <div class="container is-max-desktop content">
       <div class="bibtex-header">
         <h2 class="title">BibTeX</h2>
@@ -480,41 +632,400 @@
           <span class="copy-text">Copy</span>
         </button>
       </div>
-      <pre id="bibtex-code"><code>@article{YourPaperKey2024,
-  title={Your Paper Title Here},
-  author={First Author and Second Author and Third Author},
-  journal={Conference/Journal Name},
-  year={2024},
-  url={https://your-domain.com/your-project-page}
+      <pre id="bibtex-code"><code>@article{xing2026adaptsplat,
+  title   = {AdaptSplat: Adapting Vision Foundation Models for Feed-Forward 3D Gaussian Splatting},
+  author  = {Xing, Mingwei and Wang, Xinliang and Shi, Yifeng},
+  journal = {arXiv preprint arXiv:2605.10239},
+  year    = {2026}
 }</code></pre>
     </div>
-</section>
-<!--End BibTex citation -->
+  </section>
 
+  </main>
 
   <footer class="footer">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-8">
-        <div class="content">
-
-          <p>
-            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
-            You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
-          </p>
-
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content has-text-centered">
+            <p>
+              This page was built using the
+              <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>
+              adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+              Licensed under a
+              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
+                Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
-<!-- Statcounter tracking code -->
-  
-<!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
+  <!-- ══════════════════════════════════════════════════════════
+       VIDEO COMPARISON + SCENE NAV JAVASCRIPT
+  ══════════════════════════════════════════════════════════ -->
+  <script>
+  // ── Section A: DL3DV ours-only (canvas double-buffer) ────
+  (function () {
+    var SCENES = [
+      'static/videos_dl3dv/ours/0a485338bbdaf19ba9090b874bb36ef0599a9c9a475a382c22903cf5981c6ea6.mp4',
+      'static/videos_dl3dv/ours/5a27c00f525f5484b7aa0d0107051253bf7bb395bde0b3a4486ff8c52fb4965e.mp4',
+      'static/videos_dl3dv/ours/b4f53094fd31dcc2de1c1d1fdfeffac5259e9bdf39d77b552ff948e4bdf1fd8e.mp4',
+      'static/videos_dl3dv/ours/df04f58064684c1a31aa0ffbbcf34199d01d0a0ff289588eb2d6c6cf50a3922c.mp4',
+      'static/videos_dl3dv/ours/ff592398657b3dfe94153332861985194a3e3c9d199c4a3a27a0ce4038e81ade.mp4'
+    ];
+    var RATE = 0.3;
+    var current = 0;
+    var switchGen = 0;
 
-    <!-- End of Statcounter Code -->
+    function boot() {
+      if (!document.getElementById('vc-main-a')) return;
+      var canvas  = document.getElementById('vc-canvas-a');
+      var ctx     = canvas.getContext('2d');
+      var vidA    = document.getElementById('vid-ours-a');
+      var vidB    = document.getElementById('vid-ours-a-buf');
+      var overlay = document.getElementById('vc-overlay-a');
 
-  </body>
-  </html>
+      var activeVid = vidA;
+      var bufVid    = vidB;
+
+      function resizeCanvas() {
+        if (activeVid.videoWidth > 0 && canvas.width !== activeVid.videoWidth) {
+          canvas.width  = activeVid.videoWidth;
+          canvas.height = activeVid.videoHeight;
+        }
+      }
+      function drawLoop() {
+        if (activeVid.readyState >= 2) {
+          resizeCanvas();
+          ctx.drawImage(activeVid, 0, 0, canvas.width, canvas.height);
+        }
+        requestAnimationFrame(drawLoop);
+      }
+
+      function updateDots(t) {
+        document.querySelectorAll('.scene-dot-a').forEach(function (d) {
+          d.classList.toggle('active', parseInt(d.dataset.target) === t);
+        });
+      }
+      function switchScene(t) {
+        t = ((t % SCENES.length) + SCENES.length) % SCENES.length;
+        current = t;
+        var gen    = ++switchGen;
+        var newVid = bufVid;
+        newVid.src   = SCENES[t];
+        newVid.muted = true;
+        newVid.loop  = true;
+        newVid.load();
+        newVid.addEventListener('canplay', function () {
+          if (gen !== switchGen) return;
+          var p = newVid.play();
+          if (p !== undefined) p.then(function () { newVid.playbackRate = RATE; }).catch(function(){});
+          activeVid.pause();
+          bufVid    = activeVid;
+          activeVid = newVid;
+        }, { once: true });
+        updateDots(t);
+      }
+
+      document.querySelectorAll('.scene-dot-a').forEach(function (d) {
+        d.addEventListener('click', function () { switchScene(parseInt(d.dataset.target)); });
+      });
+      var prev = document.getElementById('scene-prev-a');
+      var next = document.getElementById('scene-next-a');
+      if (prev) prev.addEventListener('click', function () { switchScene(current - 1); });
+      if (next) next.addEventListener('click', function () { switchScene(current + 1); });
+
+      if (overlay) overlay.addEventListener('click', function () {
+        overlay.style.display = 'none';
+        var p = activeVid.play();
+        if (p !== undefined) p.then(function () { activeVid.playbackRate = RATE; }).catch(function(){});
+      });
+
+      // Init
+      vidA.muted = true;
+      vidA.loop  = true;
+      var p = vidA.play();
+      if (p !== undefined) {
+        p.then(function () {
+          vidA.playbackRate = RATE;
+          if (overlay) overlay.style.display = 'none';
+        }).catch(function () {
+          if (overlay) overlay.style.display = 'flex';
+        });
+      }
+      requestAnimationFrame(drawLoop);
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else boot();
+  })();
+
+  // ── Section B: Canvas-based slider (MVP reference impl) ────
+  (function () {
+    var SCENES = [
+      { ours: 'static/videos/ours/bonsai.mp4',  longlrm: 'static/videos/longlrm/bonsai.mp4',  mvp: 'static/videos/mvp/bonsai.mp4'  },
+      { ours: 'static/videos/ours/kitchen.mp4', longlrm: 'static/videos/longlrm/kitchen.mp4', mvp: 'static/videos/mvp/kitchen.mp4' },
+      { ours: 'static/videos/ours/room.mp4',    longlrm: 'static/videos/longlrm/room.mp4',    mvp: 'static/videos/mvp/room.mp4'    },
+      { ours: 'static/videos/ours/Train.mp4',   longlrm: 'static/videos/longlrm/Train.mp4',   mvp: 'static/videos/mvp/Train.mp4'   },
+      { ours: 'static/videos/ours/counter.mp4', longlrm: 'static/videos/longlrm/counter.mp4', mvp: 'static/videos/mvp/counter.mp4' }
+    ];
+    var RIGHT_CFG = [
+      { key: 'longlrm', label: 'Long-LRM', labelColor: '#7E98F7', btnLabel: 'MVP',      btnColor: '#FCA55EFF' },
+      { key: 'mvp',     label: 'MVP',      labelColor: '#A8D18D', btnLabel: 'Long-LRM', btnColor: '#7E98F7'   }
+    ];
+
+    function boot() {
+      var wrapper = document.querySelector('.video-slider-wrapper-b');
+      if (!wrapper) return;
+
+      var canvas      = wrapper.querySelector('.video-canvas-b');
+      var ctx         = canvas.getContext('2d');
+      var vidLeft     = wrapper.querySelector('.vid-left-b');
+      var vidLlrm     = wrapper.querySelector('.vid-right-llrm');
+      var vidMvp      = wrapper.querySelector('.vid-right-mvp');
+      var rightVideos = [vidLlrm, vidMvp];
+      var sliderBar   = wrapper.querySelector('.slider-bar-b');
+      var sliderHnd   = wrapper.querySelector('.slider-handle-b');
+      var toggleBtn   = document.getElementById('vc-pause-btn-b');
+      var changeBtn   = document.getElementById('vc-compare-btn-b');
+      var rightLabel  = document.getElementById('vc-label-right-b');
+
+      var RATE        = 0.7;
+      var position    = 0.5;
+      var isPlaying   = false;
+      var rightIdx    = 0;
+      var current     = 0;
+      var activeRight = vidLlrm;
+      var switchGen   = 0;
+      var syncing     = false;
+      var syncRafId   = null;
+
+      function setRate(v) { if (v) v.playbackRate = RATE; }
+
+      // ── Canvas draw loop ──────────────────────────────────────
+      function resizeCanvas() {
+        if (vidLeft.videoWidth > 0 && canvas.width !== vidLeft.videoWidth) {
+          canvas.width  = vidLeft.videoWidth;
+          canvas.height = vidLeft.videoHeight;
+        }
+      }
+      function drawLoop() {
+        resizeCanvas();
+        var w = canvas.width, h = canvas.height;
+        if (w === 0) { requestAnimationFrame(drawLoop); return; }
+        ctx.drawImage(vidLeft, 0, 0, w, h);
+        var target = rightVideos[rightIdx];
+        if (target.readyState >= 2 && !target.seeking) activeRight = target;
+        var splitX = Math.floor(w * position);
+        if (activeRight.readyState >= 2)
+          ctx.drawImage(activeRight, splitX, 0, w - splitX, h, splitX, 0, w - splitX, h);
+        var pct = (position * 100) + '%';
+        if (sliderBar) sliderBar.style.left = pct;
+        if (sliderHnd)  sliderHnd.style.left = pct;
+        requestAnimationFrame(drawLoop);
+      }
+
+      // ── Slider interaction ────────────────────────────────────
+      function updatePos(clientX) {
+        var rect = canvas.getBoundingClientRect();
+        position = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      }
+      wrapper.addEventListener('mousemove', function (e) { updatePos(e.clientX); });
+      wrapper.addEventListener('touchstart', function (e) { updatePos(e.touches[0].clientX); }, { passive: true });
+      wrapper.addEventListener('touchmove',  function (e) { updatePos(e.touches[0].clientX); e.preventDefault(); }, { passive: false });
+
+      // ── Sync loop (no stall handler — matches reference) ──────
+      function softSyncLoop() {
+        if (!syncing || vidLeft.paused) return;
+        var t = vidLeft.currentTime;
+        rightVideos.forEach(function (v) {
+          if (!v.paused && Math.abs(v.currentTime - t) > 0.05) v.currentTime = t;
+        });
+        if (vidLeft.requestVideoFrameCallback) {
+          vidLeft.requestVideoFrameCallback(softSyncLoop);
+        } else {
+          syncRafId = requestAnimationFrame(softSyncLoop);
+        }
+      }
+      function startSync() {
+        if (syncing) return;
+        syncing = true;
+        if (vidLeft.requestVideoFrameCallback) {
+          vidLeft.requestVideoFrameCallback(softSyncLoop);
+        } else {
+          syncRafId = requestAnimationFrame(softSyncLoop);
+        }
+      }
+      function stopSync() {
+        syncing = false;
+        if (syncRafId) { cancelAnimationFrame(syncRafId); syncRafId = null; }
+      }
+
+      // ── Play / Pause ──────────────────────────────────────────
+      function setAllPlayState(play) {
+        isPlaying = play;
+        if (play) {
+          setRate(vidLeft);
+          setRate(rightVideos[rightIdx]);
+          Promise.all([vidLeft.play(), rightVideos[rightIdx].play()]).then(function(){ startSync(); }).catch(function(){});
+          toggleBtn.textContent = '⏸';
+        } else {
+          stopSync();
+          var t = vidLeft.currentTime;
+          vidLeft.pause();
+          rightVideos[rightIdx].pause();
+          vidLeft.currentTime = t;
+          rightVideos[rightIdx].currentTime = t;
+          toggleBtn.textContent = '▶';
+        }
+      }
+      toggleBtn.addEventListener('click', function () { setAllPlayState(!isPlaying); });
+
+      // ── Scene switching ───────────────────────────────────────
+      function updateDots(idx) {
+        document.querySelectorAll('.scene-dot-b').forEach(function (d) {
+          d.classList.toggle('active', parseInt(d.dataset.target) === idx);
+        });
+      }
+      function switchScene(t) {
+        t = ((t % SCENES.length) + SCENES.length) % SCENES.length;
+        current = t;
+        var s   = SCENES[t];
+        var gen = ++switchGen;
+        var capRight = rightVideos[rightIdx]; // capture now, rightIdx may change later
+
+        stopSync();
+        position = 0.5;
+        isPlaying = true;
+        toggleBtn.textContent = '⏸';
+
+        var leftReady = false, rightReady = false;
+        function tryStart() {
+          if (!leftReady || !rightReady || gen !== switchGen) return;
+          activeRight = capRight; // force draw loop to use new video immediately
+          setRate(vidLeft);
+          setRate(capRight);
+          Promise.all([vidLeft.play(), capRight.play()]).then(function(){ startSync(); }).catch(function(){});
+        }
+
+        vidLeft.addEventListener('canplaythrough', function onCanPlayL() {
+          vidLeft.removeEventListener('canplaythrough', onCanPlayL);
+          leftReady = true; tryStart();
+        });
+        capRight.addEventListener('canplaythrough', function onCanPlayR() {
+          capRight.removeEventListener('canplaythrough', onCanPlayR);
+          rightReady = true; tryStart();
+        });
+
+        vidLeft.src = s.ours;    vidLeft.muted = true;  vidLeft.loop = true;  vidLeft.load();
+        vidLlrm.src = s.longlrm; vidLlrm.muted = true;  vidLlrm.loop = true;  vidLlrm.load();
+        vidMvp.src  = s.mvp;     vidMvp.muted  = true;   vidMvp.loop  = true;   vidMvp.load();
+
+        updateDots(t);
+      }
+
+      document.querySelectorAll('.scene-dot-b').forEach(function (d) {
+        d.addEventListener('click', function () { switchScene(parseInt(d.dataset.target)); });
+      });
+      var prevBtn = document.getElementById('scene-prev-b');
+      var nextBtn = document.getElementById('scene-next-b');
+      if (prevBtn) prevBtn.addEventListener('click', function () { switchScene(current - 1); });
+      if (nextBtn) nextBtn.addEventListener('click', function () { switchScene(current + 1); });
+
+      // ── Compare mode switch ───────────────────────────────────
+      function updateLabels() {
+        var cfg = RIGHT_CFG[rightIdx];
+        var nxt = RIGHT_CFG[(rightIdx + 1) % 2];
+        if (rightLabel) { rightLabel.textContent = cfg.label; rightLabel.style.color = cfg.labelColor; }
+        if (changeBtn)  changeBtn.innerHTML = 'Click to compare with <span style="color:' + nxt.labelColor + '">' + nxt.label + '</span>';
+      }
+      if (changeBtn) {
+        updateLabels();
+        changeBtn.addEventListener('click', function () {
+          var oldIdx = rightIdx;
+          rightIdx = (rightIdx + 1) % 2;
+          rightVideos[oldIdx].pause();
+          stopSync();
+          var newVid = rightVideos[rightIdx];
+          newVid.currentTime = vidLeft.currentTime;
+          if (isPlaying) {
+            newVid.addEventListener('seeked', function onSeeked() {
+              newVid.removeEventListener('seeked', onSeeked);
+              setRate(newVid);
+              newVid.play().then(function(){ startSync(); }).catch(function(){});
+            });
+          }
+          updateLabels();
+        });
+      }
+
+      // ── Init (matches reference) ──────────────────────────────
+      vidLeft.muted = true; vidLeft.loop = true;
+      rightVideos.forEach(function (v) { v.muted = true; v.loop = true; });
+      toggleBtn.textContent = '⏸';
+      setRate(vidLeft);
+      setRate(rightVideos[rightIdx]);
+      Promise.all([vidLeft.play(), rightVideos[rightIdx].play()]).then(function () {
+        isPlaying = true;
+        startSync();
+      }).catch(function () {
+        isPlaying = false;
+      });
+      requestAnimationFrame(drawLoop);
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+    else boot();
+  })();
+  </script>
+
+  <script>
+  // ── Preload all Section B videos, show progress overlay ──────────────
+  (function () {
+    var VIDEOS = [
+      'static/videos/ours/bonsai.mp4',
+      'static/videos/ours/kitchen.mp4',
+      'static/videos/ours/room.mp4',
+      'static/videos/ours/Train.mp4',
+      'static/videos/ours/counter.mp4',
+      'static/videos/longlrm/bonsai.mp4',
+      'static/videos/longlrm/kitchen.mp4',
+      'static/videos/longlrm/room.mp4',
+      'static/videos/longlrm/Train.mp4',
+      'static/videos/longlrm/counter.mp4',
+      'static/videos/mvp/bonsai.mp4',
+      'static/videos/mvp/kitchen.mp4',
+      'static/videos/mvp/room.mp4',
+      'static/videos/mvp/Train.mp4',
+      'static/videos/mvp/counter.mp4',
+    ];
+    var total   = VIDEOS.length;
+    var loaded  = 0;
+    var overlay = document.getElementById('page-loading');
+    var fill    = document.getElementById('pl-fill');
+    var pct     = document.getElementById('pl-pct');
+
+    function tick() {
+      loaded++;
+      fill.style.width = (loaded / total * 100) + '%';
+      pct.textContent  = loaded + ' / ' + total;
+      if (loaded >= total) {
+        setTimeout(function () { overlay.classList.add('done'); }, 400);
+      }
+    }
+
+    VIDEOS.forEach(function (src) {
+      var v = document.createElement('video');
+      v.muted   = true;
+      v.preload = 'auto';
+      v.src     = src;
+      v.addEventListener('canplaythrough', tick, { once: true });
+      v.load();
+    });
+  })();
+  </script>
+
+</body>
+</html>
